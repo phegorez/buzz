@@ -1,75 +1,55 @@
 <template>
-  <main class="container">
-    <section class="section">
-      <div class="input-area">
-        <input type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" v-model="input"/>
-        <button type="button" class="btn btn-outline btn-success" @click="getData">search</button>
-      </div>
-      <article class="card card-compact w-96 bg-base-100 shadow-xl">
-          <h1> {{ data.strDrink }}</h1>
-          <img :src="data.strDrinkThumb">
-          <p> {{ data.strCategory }} </p>
-          <p> {{data.strAlcoholic}} </p>
-          <h1>Ingredient</h1>
-          <ul>
-            <li>
-              <p>
-                {{data.strIngredient1}}
-              </p>
-            </li>
-            <li>
-              <p>
-                {{data.strIngredient2}}
-              </p>
-            </li>
-            <li>
-              <p>
-                {{data.strIngredient3}}
-              </p>
-            </li>
-            <li>
-              <p>
-                {{data.strIngredient4}}
-              </p>
-            </li>
-          </ul>
-        </article>
-    </section>
+  <main class="container flex flex-col gap-4 mx-auto w-min p-8 rounded-lg shadow-main shadow-info">
+    <InputComponent @formInput='getData' />
+    <DisplayComponent :demoData='demoData' :data='data' :ingredients="ingredients" />
   </main>
 </template>
 <script>
+import DisplayComponent from './components/DisplayComponent.vue'
+import InputComponent from './components/InputComponent.vue'
 export default {
+  components: {
+    InputComponent,
+    DisplayComponent
+  },
   data() {
     return {
       data: [],
+      ingredients : [],
       input: '',
-      apiUrl : 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s='
+      apiUrl: 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=',
+      demoData: [
+        {
+          Drink: 'Margarita',
+          Category: 'Ordinary Drink',
+          Instructions: 'Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten only the outer rim and sprinkle the salt on it. The salt should present to the lips of the imbiber and never mix into the cocktail. Shake the other ingredients with ice, then carefully pour into the glass',
+          thumdnailUrl: 'https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg',
+          Ingredient: ['Tequila', 'Triple sec', 'Lime juice', 'Salt']
+        }
+      ],
     }
   },
   methods: {
-    getData() {
-      fetch(this.apiUrl + this.input)
+    getData(input) {
+      fetch(this.apiUrl + input)
         .then((res) => res.json())
         .then((data) => {
           this.data = data.drinks[0]
+          console.log(this.data)
+          
+          this.ingredients = []
+
+          for (const key in data.drinks[0]) {
+            if(key.startsWith('strIngredient')) {
+              const value = data.drinks[0][key]
+              if(typeof value === 'string' && value !== null) {
+                this.ingredients.push(value)
+              }
+            }
+          }
+          console.log('This is ingredients', this.ingredients);
         })
     }
   }
 }
 </script>
-<style scoped="">
-  .section{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-
-  .input-area {
-    display: flex;
-    align-items: center;
-    gap: 80px;
-    margin-bottom: 20px;
-  }
-</style>
