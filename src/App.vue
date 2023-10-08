@@ -1,7 +1,7 @@
 <template>
   <main class="container flex flex-col gap-4 mx-auto w-min p-8 rounded-lg shadow-main shadow-info">
-    <InputComponent @formInput='getData' @random="respRandom" />
-    <DisplayComponent :demoData='demoData' :data='data' :ingredients="ingredients" :isFetch="isFetch" />
+    <InputComponent @formInput='getData' :notFound="notFound" @random="respRandom" />
+    <DisplayComponent :defaultDisplay="defaultDisplay" :data='data' :ingredients="ingredients" :isFetch="isFetch" />
   </main>
 </template>
 <script>
@@ -20,16 +20,32 @@ export default {
       apiUrl: 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=',
       randomCocktail: 'https://www.thecocktaildb.com/api/json/v1/1/random.php',
       isFetch: false,
-      demoData: [
-        {
-          Drink: 'Margarita',
-          Category: 'Ordinary Drink',
-          Instructions: 'Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten only the outer rim and sprinkle the salt on it. The salt should present to the lips of the imbiber and never mix into the cocktail. Shake the other ingredients with ice, then carefully pour into the glass',
-          thumdnailUrl: 'https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg',
-          Ingredient: ['Tequila', 'Triple sec', 'Lime juice', 'Salt']
-        }
-      ],
+      notFound: false,
+      defaultDisplay: []
     }
+  },
+  created() {
+    fetch(this.randomCocktail)
+      .then((res) => res.json())
+      .then((data) => {
+        const defaultData = data.drinks[0]
+        this.defaultDisplay = defaultData
+
+        this.ingredients = []
+
+        for (const key in defaultData) {
+          if (key.startsWith('strIngredient')) {
+            const value = defaultData[key]
+            if (typeof value === 'string' && value !== null) {
+              this.ingredients.push(value)
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching data', error);
+      }
+      )
   },
   methods: {
     getData(input) {
@@ -37,7 +53,6 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           this.data = data.drinks[0]
-          console.log(this.data)
 
           this.ingredients = []
 
@@ -54,6 +69,7 @@ export default {
         })
         .catch((error) => {
           console.error('Error fetching data', error)
+          this.notFound = true;
         })
     },
 
@@ -63,7 +79,6 @@ export default {
         .then((randomData) => {
           const getRandomData = randomData.drinks[0]
           this.data = getRandomData
-          console.log(this.data)
 
           this.ingredients = []
 
