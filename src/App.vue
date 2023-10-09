@@ -1,7 +1,16 @@
 <template>
   <main class="container flex flex-col gap-4 mx-auto w-min p-8 rounded-lg shadow-main shadow-info">
-    <InputComponent @formInput='getData' :notFound="notFound" @random="respRandom" />
+    <InputComponent @formInput='getData' @random="respRandom" />
     <DisplayComponent :defaultDisplay="defaultDisplay" :data='data' :ingredients="ingredients" :isFetch="isFetch" />
+    <dialog id="notFound" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Oh oh! dsa</h3>
+        <p class="py-4">Not found this drinks</p>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
   </main>
 </template>
 <script>
@@ -20,7 +29,6 @@ export default {
       apiUrl: 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=',
       randomCocktail: 'https://www.thecocktaildb.com/api/json/v1/1/random.php',
       isFetch: false,
-      notFound: false,
       defaultDisplay: []
     }
   },
@@ -53,7 +61,7 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           this.data = data.drinks[0]
-
+          console.log(!this.data)
           this.ingredients = []
 
           for (const key in data.drinks[0]) {
@@ -64,15 +72,14 @@ export default {
               }
             }
           }
-          console.log('This is ingredients', this.ingredients);
           this.isFetch = true
         })
         .catch((error) => {
           console.error('Error fetching data', error)
-          this.notFound = true;
+          const notFound = document.getElementById('notFound')
+          notFound.showModal()
         })
     },
-
     respRandom() {
       fetch(this.randomCocktail)
         .then((res) => res.json())
