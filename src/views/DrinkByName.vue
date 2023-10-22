@@ -15,7 +15,6 @@ import drinksArray from '../drinksArray'
 
 const route = useRoute()
 const keyword = ref('')
-let test = ref('')
 const drinks = computed(() => store.state.searchedCockTails)
 
 function searchCockTails() {
