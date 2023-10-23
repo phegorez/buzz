@@ -6,7 +6,7 @@
             class="dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box overflow-auto w-60 max-h-[200px]">
             <li v-for="result in searchResults" :key="result" @click.stop="setSelected(result)"
                 class="border-b pb-1 cursor-pointer hover:font-bold">
-                {{ searchResults? result : 'Not Found' }}
+                {{ searchResults ? result : 'Not Found' }}
             </li>
         </ul>
     </div>
@@ -26,7 +26,6 @@ const props = defineProps({
 const emit = defineEmits(['selected', 'searchCockTails']);
 
 const search = ref('');
-const selectedItem = ref('');
 const isOpen = ref(false);
 
 const openList = () => {
@@ -34,11 +33,8 @@ const openList = () => {
 };
 
 const searchResults = computed(() => {
-    return props.source.filter(item => {
-        if (item.toLowerCase().includes(search.value.toLowerCase())) {
-            selectedItem.value = item;
-            return item;
-        }
+    return props.source.filter((item) => {
+        return item.toLowerCase().startsWith(search.value.toLowerCase());
     });
 });
 
