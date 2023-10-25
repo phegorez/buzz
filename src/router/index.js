@@ -36,7 +36,7 @@ const routes = [
             {
                 path: '/ingredients',
                 name: 'ingredients',
-                comments: Ingredients
+                component: Ingredients
             },
             {
                 path: '/drink/:id',

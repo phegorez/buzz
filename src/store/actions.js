@@ -8,7 +8,7 @@ export function searchedCockTails({ commit }, keyword) {
 }
 
 export function searchedCockTailsByLetter({ commit }, letter) {
-    axiosClient.get(`search.php?l=${letter}`)
+    axiosClient.get(`search.php?f=${letter}`)
         .then(({ data }) => {
             commit(`setCockTailsByLetter`, data.drinks)
         })
