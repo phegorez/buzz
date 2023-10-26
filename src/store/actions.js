@@ -15,7 +15,7 @@ export function searchedCockTailsByLetter({ commit }, letter) {
 }
 
 export function searchedCockTailsByIngredient({ commit }, ingre) {
-    axiosClient.get(`search.php?i=${ingre}`)
+    axiosClient.get(`filter.php?i=${ingre}`)
         .then(({ data }) => {
             commit(`setCockTailsByIngredient`, data.drinks)
         })
