@@ -13,13 +13,11 @@ const drinks = ref([])
 
 onMounted(async () => {
     for (let i = 0; i < 6; i++) {
-        try {
-            axiosClient
-                .get(`random.php`)
-                .then(({ data }) => drinks.value.push(data.drinks[0]))
-        } catch (error) {
-            console.log(error)
-        }
+
+        const randomQueryParam = `?random=${Math.random()}`
+        axiosClient
+            .get(`random.php${randomQueryParam}`)
+            .then(({data}) => drinks.value.push(data.drinks[0]))
     }
 })
 
