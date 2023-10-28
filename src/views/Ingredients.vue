@@ -46,10 +46,9 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import axiosClient from '../axiosClient';
 
-const keyword = ref('')
 const ingredients = ref([])
 
 const imageSrc = (ingredient) => {
