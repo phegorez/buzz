@@ -7,6 +7,7 @@ import DrinkByIngredients from '../views/DrinkByIngredients.vue'
 import Ingredients from '../views/Ingredients.vue'
 import DrinkDetails from '../views/DrinkDetails.vue'
 import GuestLayout from '../components/GuestLayout.vue'
+import RandomDrinks from '../views/RandomDrinks.vue'
 
 const routes = [
     {
@@ -17,6 +18,11 @@ const routes = [
                 path: '/',
                 name: 'home',
                 component: Home
+            },
+            {
+                path: 'random',
+                name: 'randomDrink',
+                component: RandomDrinks
             },
             {
                 path: 'by-name/:name?',
